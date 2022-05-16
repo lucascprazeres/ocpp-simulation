@@ -1,0 +1,10 @@
+{
+    "eletroposto_simulado": {
+        "dynamic": {
+            "authorize": {"type": "object"},
+            "start_transaction": {"type": "object"},
+            "stop_transaction": { "type": "object" }
+        },
+        "static": {}
+    }
+}
