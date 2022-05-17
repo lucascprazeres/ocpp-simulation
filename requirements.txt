@@ -2,3 +2,4 @@ paho-mqtt
 requests
 holidays
 pytz
+python-dotenv

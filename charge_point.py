@@ -13,11 +13,12 @@ load_dotenv()
 DOJOT_HOST = os.getenv('DOJOT_HOST')
 MQTT_PORT = int(os.getenv('MQTT_PORT'))
 
+logging.basicConfig(level=logging.INFO, filename='eletropostos.log')
+
 class ChargePoint:
 
-    num_charge_sessions = 3
     sample_interval_seconds = 1
-    charging_seconds = 10 * 60 # 10 minutes
+    charging_seconds = 60 # 10 minutes
     
     def __init__(self, id, device, host, port):
         self.id = id
@@ -25,12 +26,11 @@ class ChargePoint:
         self.mqtt_client = Client('admin', device)
 
     async def run(self):
-        await self.mqtt_client.connect(DOJOT_HOST, MQTT_PORT)
-        
-        for _ in range(self.num_charge_sessions):
-            await self.charge()
+        self.mqtt_client.connect(DOJOT_HOST, MQTT_PORT)
 
-        await self.mqtt_client.disconnect()
+        await asyncio.sleep(self.charging_seconds)
+        
+        await self.charge()
 
 
 
@@ -77,6 +77,8 @@ class ChargePoint:
             
             self.mqtt_client.send(msg)
 
+            logging.info(f'{self.id}:{msg}')
+
             await asyncio.sleep(self.sample_interval_seconds)            
 
     async def send_start_transaction(self):
@@ -108,7 +110,7 @@ class ChargePoint:
 
         self.is_charging = False
 
-        self.mqtt_client.send(json.dumps({
+        msg = json.dumps({
             "stop_transaction": [
                 2,
                 "2961:137794",
@@ -120,7 +122,9 @@ class ChargePoint:
                     "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat()
                 }
             ]
-        }))
+        })
+
+        self.mqtt_client.send(msg)
 
         logging.info(f'{self.id}:{msg}')
 

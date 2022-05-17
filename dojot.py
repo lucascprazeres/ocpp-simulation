@@ -921,7 +921,7 @@ class Dojot(object):
 
         return response
 
-    def get_all_devices_id(self):
+    def get_all_devices_id(self, template_id):
         """
         Get all devices id as a dict with labels as keys.
 
@@ -930,7 +930,7 @@ class Dojot(object):
         dict
             A dict containing all devices id.
         """
-        url_devices = "http://" + self.ip + ":" + str(self.http_port) + "/device?page_size=999999&sortBy=label"
+        url_devices = "http://" + self.ip + ":" + str(self.http_port) + "/device/template/" + str(template_id) + "?page_size=999999"
 
         headers = {"Authorization": "Bearer {0}".format(self.jwt)}
 
@@ -959,7 +959,7 @@ class Dojot(object):
             Device id of the device if founded, None otherwise.
         """
         try:
-            devices = self.get_all_devices_id()
+            devices = self.get_all_devices_id(63)
             device_id = devices[label]
         except KeyError:
             return None
