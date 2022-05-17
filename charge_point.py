@@ -13,12 +13,12 @@ load_dotenv()
 DOJOT_HOST = os.getenv('DOJOT_HOST')
 MQTT_PORT = int(os.getenv('MQTT_PORT'))
 
-logging.basicConfig(level=logging.INFO, filename='eletropostos.log')
+logging.basicConfig(level=logging.INFO)
 
 class ChargePoint:
 
     sample_interval_seconds = 1
-    charging_seconds = 60 # 10 minutes
+    charging_seconds = 10 * 60 # 10 minutes
     
     def __init__(self, id, device, host, port):
         self.id = id
