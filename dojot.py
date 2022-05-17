@@ -850,6 +850,7 @@ class Dojot(object):
             for device in devices_list:
                 device_name = device["name"]
                 try:
+                    print(f'creating device {device_name}')
                     self.create_device(device_name=device_name, template_label=template)
                 except DeviceAlreadyExists:
                     pass
@@ -1120,7 +1121,7 @@ class Dojot(object):
             error = "A device not created can not be deleted"
             raise DeviceNotExists(message=message, error=error)
 
-    def delete_all_devices(self):
+    def delete_all_created_devices(self):
         """
         Delete all devices currently on Dojot.
 
@@ -1133,12 +1134,15 @@ class Dojot(object):
         --------
         If some of the devices was deleted from Dojot GUI during the execution of this method, it will be ignored.
         """
-        device_id = self.get_all_devices_id()
-        for dev_id in device_id.keys():
-            try:
-                self.delete_device(device_label=dev_id)
-            except DeviceNotExists:
-                pass
+        devices = get_devices()
+
+        for template, device_list in devices.items():
+            for device in device_list:
+                try:
+                    print(f"deleting device {device['name']}")
+                    self.delete_device(device_label=device["name"])
+                except DeviceNotExists:
+                    pass
 
     def get_history(self, device_id, params):
         """

@@ -22,4 +22,4 @@ dojot = Dojot(
     password=DOJOT_PASSWORD
 )
 
-dojot.create_all_devices()
+dojot.delete_all_created_devices()
