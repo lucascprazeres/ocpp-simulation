@@ -959,7 +959,7 @@ class Dojot(object):
             Device id of the device if founded, None otherwise.
         """
         try:
-            devices = self.get_all_devices_id(63)
+            devices = self.get_all_devices_id(5)
             device_id = devices[label]
         except KeyError:
             return None

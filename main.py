@@ -1,6 +1,6 @@
 import asyncio
 import os
-import datetime
+from datetime import datetime
 import json
 import logging
 
@@ -29,14 +29,14 @@ async def run_scenario(devices):
 async def run_scenarios(devices):
     scenarios = [10,20,40,80,160]
     checkpoints = {
-        "start": datetime.datetime.now(datetime.timezone.utc).isoformat()
+        "start": datetime.utcnow.isoformat()
     }
 
     for num_chargers in scenarios:
         splitted_devices = dict(list(devices.items())[:num_chargers])
         await run_scenario(splitted_devices)
 
-    checkpoints["end"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    checkpoints["end"] = datetime.utcnow.isoformat()
 
     with open('simulation_checkpoints.json', 'w') as json_file:
         json.dump(checkpoints, json_file)
@@ -52,11 +52,11 @@ async def main():
         password=DOJOT_PASSWORD
     )
 
-    dojot.create_all_devices()
-
-    devices = dojot.get_all_devices_id(template_id=63)
+    devices = dojot.get_all_devices_id(template_id=5)
 
     await run_scenarios(devices)
+
+
 
 if __name__ == '__main__':
     asyncio.run(main())
